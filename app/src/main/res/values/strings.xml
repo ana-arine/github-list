@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Github Query</string>
+    <string name="type_a_query">Type a query for Github!</string>
+    <string name="enter_a_search_query">Enter a search query and your URL will show up here!</string>
+    <string name="make_a_search">Make a search and your results will show up here!</string>
+    <string name="search">Search</string>
+
+</resources>
