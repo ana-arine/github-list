@@ -25,22 +25,44 @@
         android:text="@string/enter_a_search_query"
         />
 
-    <ScrollView
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp">
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/tv_github_search_results_json"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/make_a_search"
+                android:textSize="18sp"
+                />
+
+        </ScrollView>
 
         <TextView
-            android:id="@+id/tv_github_search_results_json"
+            android:id="@+id/tv_error_message_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/make_a_search"
-            android:textSize="18sp"
+            android:text="@string/error_message"
+            android:textSize="22sp"
+            android:padding="16dp"
+            android:visibility="invisible"
             />
 
-    </ScrollView>
+        <ProgressBar
+            android:id="@+id/pb_loading_indicator"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            android:layout_width="42dp"
+            android:layout_height="42dp" />
 
-
+    </FrameLayout>
 
 
 </LinearLayout>

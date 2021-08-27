@@ -4,5 +4,5 @@
     <string name="enter_a_search_query">Enter a search query and your URL will show up here!</string>
     <string name="make_a_search">Make a search and your results will show up here!</string>
     <string name="search">Search</string>
-
+    <string name="error_message">Failed to get results, please try again.</string>
 </resources>

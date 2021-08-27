@@ -34,25 +34,26 @@ class NetworkUtils {
             }
             return url
         }
-    }
 
-    @Throws(IOException::class)
-    fun getResponseFromHttpUrl(url: URL) : String? {
-        val urlConnection = url.openConnection() as HttpURLConnection
-        try {
-            val a: InputStream = urlConnection.inputStream
 
-            val scanner = Scanner(a)
-            scanner.useDelimiter("\\A")
+        @Throws(IOException::class)
+        fun getResponseFromHttpUrl(url: URL): String? {
+            val urlConnection = url.openConnection() as HttpURLConnection
+            try {
+                val a: InputStream = urlConnection.inputStream
 
-            val hasInput: Boolean = scanner.hasNext()
-            if (hasInput) {
-                return scanner.next()
-            } else {
-                return null
+                val scanner = Scanner(a)
+                scanner.useDelimiter("\\A")
+
+                val hasInput: Boolean = scanner.hasNext()
+                if (hasInput) {
+                    return scanner.next()
+                } else {
+                    return null
+                }
+            } finally {
+                urlConnection.disconnect()
             }
-        } finally {
-            urlConnection.disconnect()
         }
     }
 

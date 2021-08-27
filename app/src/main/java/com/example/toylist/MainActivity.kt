@@ -1,25 +1,33 @@
 package com.example.toylist
 
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import com.example.toylist.utilities.NetworkUtils
+import java.io.IOException
 import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
     // TODO (26) Create an EditText variable called mSearchBoxEditText
-    lateinit var mSearchBoxEditText: EditText
+    private lateinit var mSearchBoxEditText: EditText
 
     // TODO (27) Create a TextView variable called mUrlDisplayTextView
-    lateinit var mUrlDisplayTextView: TextView
+    private lateinit var mUrlDisplayTextView: TextView
 
     // TODO (28) Create a TextView variable called mSearchResultsTextView
-    lateinit var mSearchResultsTextView: TextView
+    private lateinit var mSearchResultsTextView: TextView
+
+    private lateinit var mErrorMessageDisplay: TextView
+
+    private lateinit var mLoadingIndicator: ProgressBar
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,14 +43,70 @@ class MainActivity : AppCompatActivity() {
         // TODO (31) Use findViewById to get a reference to mSearchResultsTextView
         mSearchResultsTextView = findViewById(R.id.tv_github_search_results_json)
 
+        mErrorMessageDisplay = findViewById(R.id.tv_error_message_display)
+
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator)
+
     }
 
-    fun makeGithubSearchQuery() {
+    private fun makeGithubSearchQuery() {
         val githubQuery = mSearchBoxEditText.text.toString()
-        val githubSearchUrl = NetworkUtils.buildUrl(githubQuery)
+        val githubSearchUrl: URL? = NetworkUtils.buildUrl(githubQuery)
         mUrlDisplayTextView.text = githubSearchUrl.toString()
+
+//        var githubSearchResults: String?
+//        try {
+//            githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl)
+//            mSearchResultsTextView.text = githubSearchResults
+//
+//        } catch (e: IOException) {
+//            e.printStackTrace()
+//        }
+        GithubQueryTask().execute(githubSearchUrl)
+
     }
 
+    private fun showJsonDataView() {
+        mErrorMessageDisplay.visibility = View.INVISIBLE
+        mSearchResultsTextView.visibility = View.VISIBLE
+    }
+
+    private fun showErrorMessage() {
+        mSearchResultsTextView.visibility = View.INVISIBLE
+        mErrorMessageDisplay.visibility = View.VISIBLE
+    }
+
+    inner class GithubQueryTask: AsyncTask<URL, Void, String>() {
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            mLoadingIndicator.visibility = View.VISIBLE
+        }
+
+        private val urls = listOf<URL>()
+        override fun doInBackground(vararg params: URL?): String? {
+            val searchUrl: URL = urls[0]
+            var githubSearchResults: String? = null
+            try {
+                githubSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            return githubSearchResults
+        }
+
+        override fun onPostExecute(githubSearchResults: String) {
+          //  super.onPostExecute(result)
+            mLoadingIndicator.visibility = View.INVISIBLE
+            if (githubSearchResults.isNotEmpty()) {
+                showJsonDataView()
+                mSearchResultsTextView.text = githubSearchResults
+            } else {
+                showErrorMessage()
+            }
+        }
+
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         //return super.onCreateOptionsMenu(menu)
